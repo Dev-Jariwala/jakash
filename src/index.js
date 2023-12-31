@@ -5,25 +5,41 @@ import {
   RouterProvider,
   Route,
   Link,
+  Routes,
+  BrowserRouter,
 } from "react-router-dom";
 import ProductPage from "./pages/ProductPage";
 import { ProductsProvider } from "./store/productContext";
+import RetailBillPage from "./pages/RetailBillPage";
+import WholeSaleBill from "./pages/WholeSaleBill";
+import AdminPage from "./pages/AdminPage";
+import Navbar from "./components/navbar/Navbar";
+import "./index.css";
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: (
+const NotFound = () => {
+  return (
+    <div>
+      <h1>404 Not Found</h1>
+      <p>Oops! The page you are looking for does not exist.</p>
+    </div>
+  );
+};
+
+export default function App() {
+  return (
+    <BrowserRouter>
       <ProductsProvider>
-        <ProductPage></ProductPage>
+        <Navbar></Navbar>
+        <Routes>
+          <Route path="/products" element={<ProductPage />}></Route>
+          <Route path="/wholesalebill" element={<WholeSaleBill />}></Route>
+          <Route path="/retailbill" element={<RetailBillPage />}></Route>
+          <Route path="/admin" element={<AdminPage />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
+        </Routes>
       </ProductsProvider>
-    ),
-  },
-  {
-    path: "about",
-    element: <div>About</div>,
-  },
-]);
+    </BrowserRouter>
+  );
+}
 
-createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
-);
+createRoot(document.getElementById("root")).render(<App />);

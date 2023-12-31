@@ -6,6 +6,7 @@ const ProductTable = ({
   indexOfFirstProduct,
   handleDelete,
   onEdit,
+  isAdmin,
 }) => {
   return (
     <table border="1px">
@@ -13,6 +14,7 @@ const ProductTable = ({
         <tr>
           <th>NO.</th>
           <th>Product Name</th>
+          {isAdmin && <th>Cost Price</th>}
           <th>Retail Price</th>
           <th>Wholesale Price</th>
           <th>Stock</th>
@@ -26,14 +28,12 @@ const ProductTable = ({
             return (
               <tr key={productIndex}>
                 <Product
-                  productName={product.productName}
-                  retailPrice={product.retailPrice}
-                  wholesalePrice={product.wholesalePrice}
-                  stock={product.stock}
+                  product={product}
                   productIndex={productNumber}
                   onDelete={handleDelete}
                   onEdit={onEdit}
                   productId={product._id}
+                  isAdmin={isAdmin}
                 />
               </tr>
             );

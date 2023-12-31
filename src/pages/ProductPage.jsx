@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-import Product from "../components/Product";
+import Product from "../components/productpage/Product";
 import "./ProductPage.css";
 
-import ProductPagination from "../components/ProductPagination";
-import ProductTable from "../components/ProductTable";
+import ProductPagination from "../components/productpage/ProductPagination";
+import ProductTable from "../components/productpage/ProductTable";
 import { ProductsContext } from "../store/productContext";
 import axios from "axios";
 import BACKEND_URL from "../assets/BACKEND_URL";
@@ -11,11 +11,13 @@ import BACKEND_URL from "../assets/BACKEND_URL";
 const ProductPage = () => {
   // useState variables....
   const { products, setProducts } = useContext(ProductsContext);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [addingProduct, setAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState(false);
   const [editProduct, setEditProduct] = useState({});
   const [newProduct, setNewProduct] = useState({
     productName: "",
+    costPrice: 0,
     retailPrice: 0,
     wholesalePrice: 0,
     stock: 0,
@@ -67,6 +69,7 @@ const ProductPage = () => {
         setProducts(response.data.products);
         setNewProduct({
           productName: "",
+          costPrice: 0,
           retailPrice: 0,
           wholesalePrice: 0,
           stock: 0,
@@ -86,6 +89,7 @@ const ProductPage = () => {
             return {
               _id: product._id,
               productName: product.productName,
+              costPrice: product.costPrice,
               retailPrice: product.retailPrice,
               wholesalePrice: product.wholesalePrice,
               stock: product.stock,
@@ -102,6 +106,7 @@ const ProductPage = () => {
         `${BACKEND_URL}product/update-product/${productId}`,
         {
           productName: editProduct.productName,
+          costPrice: editProduct.costPrice,
           retailPrice: editProduct.retailPrice,
           wholesalePrice: editProduct.wholesalePrice,
           stock: editProduct.stock,
@@ -122,7 +127,10 @@ const ProductPage = () => {
       <div className="product-page">
         <div className="p-title">
           <h2>Products Page</h2>
-          <button onClick={() => setAddingProduct((prev) => !prev)}>
+          <button
+            onClick={() => setAddingProduct((prev) => !prev)}
+            disabled={!isAdmin}
+          >
             {addingProduct ? "Cancle" : "New Product"}
           </button>
         </div>
@@ -185,6 +193,21 @@ const ProductPage = () => {
                       onChange={(e) =>
                         setNewProduct((prev) => {
                           return { ...prev, stock: e.target.value };
+                        })
+                      }
+                    />
+                  </label>
+                </div>
+                <div className="f-row">
+                  <label>
+                    Cost Price:
+                    <input
+                      type="number"
+                      placeholder="Cost Price"
+                      value={newProduct.costPrice}
+                      onChange={(e) =>
+                        setNewProduct((prev) => {
+                          return { ...prev, costPrice: e.target.value };
                         })
                       }
                     />
@@ -266,12 +289,44 @@ const ProductPage = () => {
                     />
                   </label>
                 </div>
+                <div className="f-row">
+                  <label>
+                    Cost Price:
+                    <input
+                      type="number"
+                      placeholder="Cost Price"
+                      value={editProduct.costPrice}
+                      onChange={(e) =>
+                        setEditProduct((prev) => {
+                          return { ...prev, costPrice: e.target.value };
+                        })
+                      }
+                    />
+                  </label>
+                </div>
               </form>
             </div>
           )}
           <div className="product-table">
             <h2 style={{ textAlign: "center" }}>Product Table:</h2>
             <div className="search">
+              <button
+                onClick={() => {
+                  if (isAdmin) {
+                    setIsAdmin(false);
+                  } else {
+                    const adminpass = "jakash@123";
+                    const enteredpass = prompt("Enter password");
+                    if (adminpass === enteredpass) {
+                      setIsAdmin(true);
+                    } else {
+                      alert("Invalid Pass");
+                    }
+                  }
+                }}
+              >
+                {isAdmin ? "Done" : "Admin"}
+              </button>
               <form>
                 <input
                   type="text"
@@ -287,6 +342,7 @@ const ProductPage = () => {
               indexOfFirstProduct={indexOfFirstProduct}
               handleDelete={handleDelete}
               onEdit={onEdit}
+              isAdmin={isAdmin}
             />
             <ProductPagination
               setCurrentPage={setCurrentPage}

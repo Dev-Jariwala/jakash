@@ -116,13 +116,25 @@
     margin-left: 10px;
 }
 
+.search {
+    /* background-color: red; */
+    display: flex;
+    width: 70%;
+    margin: auto;
+    justify-content: space-between;
+}
+
+.search button {
+    padding: 5px 10px;
+}
+
 .search form {
     display: flex;
     align-items: center;
-    justify-content: end;
-    /* background-color: red; */
-    width: 70%;
-    margin: auto;
+    /* justify-content: end; */
+    /* background-color: yellow; */
+    /* width: 70%; */
+    /* margin: auto; */
 
 }
 
