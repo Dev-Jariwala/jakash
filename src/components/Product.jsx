@@ -4,7 +4,7 @@ const Product = ({
   productIndex,
   productName,
   retailPrice,
-  wholeSalePrice,
+  wholesalePrice,
   stock,
   onDelete,
   onEdit,
@@ -15,7 +15,7 @@ const Product = ({
       <td>{productIndex + 1}</td>
       <td>{productName ? productName : "-"}</td>
       <td>{retailPrice ? retailPrice : "-"} Rs</td>
-      <td>{wholeSalePrice ? wholeSalePrice : "-"} Rs</td>
+      <td>{wholesalePrice ? wholesalePrice : "-"} Rs</td>
       <td>{stock ? stock : "-"}</td>
       <td>
         <div className="action">

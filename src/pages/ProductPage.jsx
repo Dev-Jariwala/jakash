@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Product from "../components/Product";
 import "./ProductPage.css";
-import fakeProducts from "../assets/fakeProducts";
+
 import ProductPagination from "../components/ProductPagination";
 import ProductTable from "../components/ProductTable";
+import { ProductsContext } from "../store/productContext";
+import axios from "axios";
+import BACKEND_URL from "../assets/BACKEND_URL";
 
 const ProductPage = () => {
   // useState variables....
-  const [products, setProducts] = useState(fakeProducts);
+  const { products, setProducts } = useContext(ProductsContext);
   const [addingProduct, setAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState(false);
   const [editProduct, setEditProduct] = useState({});
   const [newProduct, setNewProduct] = useState({
     productName: "",
     retailPrice: 0,
-    wholeSalePrice: 0,
+    wholesalePrice: 0,
     stock: 0,
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -38,39 +41,53 @@ const ProductPage = () => {
   );
 
   // function for product crud.....
-  function handleDelete(productId) {
-    setProducts((prev) =>
-      prev.filter((product) => productId !== product.productId)
-    );
+  async function handleDelete(productId) {
+    try {
+      await axios.delete(`${BACKEND_URL}product/delete-product/${productId}`);
+      const response = await axios.get(
+        `${BACKEND_URL}product/fetch-allProducts`
+      );
+      setProducts(response.data.products);
+    } catch (error) {}
   }
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (newProduct.productName.trim() !== "") {
-      setProducts((prev) => {
-        return [...prev, { ...newProduct, productId: Date.now() }];
-      });
-      setNewProduct({
-        productName: "",
-        retailPrice: 0,
-        wholeSalePrice: 0,
-        stock: 0,
-      });
-      setAddingProduct(() => false);
-    } else {
-      alert("Fill all Details correctly!");
-    }
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+      if (newProduct.productName.trim() !== "") {
+        await axios.post(
+          `${BACKEND_URL}product/create-product`,
+          {
+            ...newProduct,
+          },
+          { withCredentials: true }
+        );
+        const response = await axios.get(
+          `${BACKEND_URL}product/fetch-allProducts`
+        );
+        setProducts(response.data.products);
+        setNewProduct({
+          productName: "",
+          retailPrice: 0,
+          wholesalePrice: 0,
+          stock: 0,
+        });
+        setAddingProduct(() => false);
+      } else {
+        alert("Fill all Details correctly!");
+      }
+    } catch (error) {}
   }
   function onEdit(productId) {
     setEditingProduct(true);
     setEditProduct((prev) => {
       return products.map((product) => {
-        if (productId === product.productId) {
+        if (productId === product._id) {
           setEditProduct(() => {
             return {
-              productId,
+              _id: product._id,
               productName: product.productName,
               retailPrice: product.retailPrice,
-              wholeSalePrice: product.wholeSalePrice,
+              wholesalePrice: product.wholesalePrice,
               stock: product.stock,
             };
           });
@@ -78,26 +95,30 @@ const ProductPage = () => {
       });
     });
   }
-  function handleEdit(e) {
-    e.preventDefault();
+  async function handleEdit(e, productId) {
+    try {
+      e.preventDefault();
+      await axios.put(
+        `${BACKEND_URL}product/update-product/${productId}`,
+        {
+          productName: editProduct.productName,
+          retailPrice: editProduct.retailPrice,
+          wholesalePrice: editProduct.wholesalePrice,
+          stock: editProduct.stock,
+        },
+        { withCredentials: true }
+      );
 
-    const newProducts = [...products];
+      const response = await axios.get(
+        `${BACKEND_URL}product/fetch-allProducts`
+      );
+      setProducts(response.data.products);
 
-    newProducts.map((product) => {
-      if (product.productId === editProduct.productId) {
-        product.productName = editProduct.productName;
-        product.retailPrice = editProduct.retailPrice;
-        product.wholeSalePrice = editProduct.wholeSalePrice;
-        product.stock = editProduct.stock;
-      }
-    });
-
-    setProducts(newProducts);
-
-    setEditingProduct(false);
+      setEditingProduct(false);
+    } catch (error) {}
   }
   return (
-    <>
+    <ProductsContext.Provider value={{ products, setProducts }}>
       <div className="product-page">
         <div className="p-title">
           <h2>Products Page</h2>
@@ -147,10 +168,10 @@ const ProductPage = () => {
                     <input
                       type="number"
                       placeholder="Wholesale Price"
-                      value={newProduct.wholeSalePrice}
+                      value={newProduct.wholesalePrice}
                       onChange={(e) =>
                         setNewProduct((prev) => {
-                          return { ...prev, wholeSalePrice: e.target.value };
+                          return { ...prev, wholesalePrice: e.target.value };
                         })
                       }
                     />
@@ -174,7 +195,7 @@ const ProductPage = () => {
           )}
           {editingProduct && (
             <div className="product-form">
-              <form onSubmit={(e) => handleEdit(e)}>
+              <form onSubmit={(e) => handleEdit(e, editProduct._id)}>
                 <div className="pf-title">
                   <h4>Edit Product details: </h4>
                   <div>
@@ -223,10 +244,10 @@ const ProductPage = () => {
                     <input
                       type="number"
                       placeholder="Wholesale Price"
-                      value={editProduct.wholeSalePrice}
+                      value={editProduct.wholesalePrice}
                       onChange={(e) =>
                         setEditProduct((prev) => {
-                          return { ...prev, wholeSalePrice: e.target.value };
+                          return { ...prev, wholesalePrice: e.target.value };
                         })
                       }
                     />
@@ -277,7 +298,7 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </ProductsContext.Provider>
   );
 };
 

@@ -28,12 +28,12 @@ const ProductTable = ({
                 <Product
                   productName={product.productName}
                   retailPrice={product.retailPrice}
-                  wholeSalePrice={product.wholeSalePrice}
+                  wholesalePrice={product.wholesalePrice}
                   stock={product.stock}
                   productIndex={productNumber}
                   onDelete={handleDelete}
                   onEdit={onEdit}
-                  productId={product.productId}
+                  productId={product._id}
                 />
               </tr>
             );
