@@ -115,3 +115,22 @@
     padding: 5px 10px;
     margin-left: 10px;
 }
+
+.search form {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    /* background-color: red; */
+    width: 70%;
+    margin: auto;
+
+}
+
+.search form input {
+    padding: 5px 20px;
+}
+
+.search form button {
+    padding: 5px 10px;
+    margin-left: 20px;
+}

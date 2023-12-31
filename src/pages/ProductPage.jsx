@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import Product from "../components/Product";
 import "./ProductPage.css";
 import fakeProducts from "../assets/fakeProducts";
+import ProductPagination from "../components/ProductPagination";
+import ProductTable from "../components/ProductTable";
 
 const ProductPage = () => {
+  // useState variables....
   const [products, setProducts] = useState(fakeProducts);
   const [addingProduct, setAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState(false);
@@ -16,26 +19,35 @@ const ProductPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [goto, setGoto] = useState(currentPage);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // pagination calculation
   const PAGE_SIZE = 5;
   const totalPages = Math.ceil(products.length / PAGE_SIZE);
-  // Calculate the index range for products based on current page
   const indexOfLastProduct = currentPage * PAGE_SIZE;
   const indexOfFirstProduct = indexOfLastProduct - PAGE_SIZE;
-  const currentProducts = products.slice(
+  const filteredProducts = products.filter((product) =>
+    Object.values(product).some((value) =>
+      String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
   );
 
+  // function for product crud.....
   function handleDelete(productId) {
     setProducts((prev) =>
-      prev.filter((product, productIndex) => productId !== productIndex)
+      prev.filter((product) => productId !== product.productId)
     );
   }
   function handleSubmit(e) {
     e.preventDefault();
     if (newProduct.productName.trim() !== "") {
       setProducts((prev) => {
-        return [...prev, newProduct];
+        return [...prev, { ...newProduct, productId: Date.now() }];
       });
       setNewProduct({
         productName: "",
@@ -51,8 +63,8 @@ const ProductPage = () => {
   function onEdit(productId) {
     setEditingProduct(true);
     setEditProduct((prev) => {
-      return products.map((product, productIndex) => {
-        if (productId === productIndex) {
+      return products.map((product) => {
+        if (productId === product.productId) {
           setEditProduct(() => {
             return {
               productId,
@@ -71,15 +83,15 @@ const ProductPage = () => {
 
     const newProducts = [...products];
 
-    newProducts.map((product, productId) => {
-      if (productId === editProduct.productId) {
+    newProducts.map((product) => {
+      if (product.productId === editProduct.productId) {
         product.productName = editProduct.productName;
         product.retailPrice = editProduct.retailPrice;
         product.wholeSalePrice = editProduct.wholeSalePrice;
         product.stock = editProduct.stock;
       }
     });
-    console.log(newProducts);
+
     setProducts(newProducts);
 
     setEditingProduct(false);
@@ -238,112 +250,30 @@ const ProductPage = () => {
           )}
           <div className="product-table">
             <h2 style={{ textAlign: "center" }}>Product Table:</h2>
-            <table border="1px">
-              <thead>
-                <tr>
-                  <th>NO.</th>
-                  <th>Product Name</th>
-                  <th>Retail Price</th>
-                  <th>Wholesale Price</th>
-                  <th>Stock</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentProducts.length > 0 &&
-                  currentProducts.map((product, productIndex) => {
-                    const productNumber = indexOfFirstProduct + productIndex;
-                    return (
-                      <tr key={productIndex}>
-                        <Product
-                          productName={product.productName}
-                          retailPrice={product.retailPrice}
-                          wholeSalePrice={product.wholeSalePrice}
-                          stock={product.stock}
-                          productIndex={productNumber}
-                          onDelete={handleDelete}
-                          onEdit={onEdit}
-                        />
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-            <div className="pagination">
-              <div className="pagination-btns">
-                <button
-                  className="prev-btn"
-                  onClick={() =>
-                    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))
-                  }
-                >
-                  Previous
-                </button>
-                {currentPage > 1 && (
-                  <button
-                    className="num-btn"
-                    onClick={() => setCurrentPage((prev) => prev - 1)}
-                  >
-                    {currentPage - 1}
-                  </button>
-                )}
-                <button className="num-btn">{currentPage}</button>
-
-                {currentPage < totalPages && (
-                  <button
-                    className="num-btn"
-                    onClick={() => setCurrentPage((prev) => prev + 1)}
-                  >
-                    {currentPage + 1}
-                  </button>
-                )}
-                {currentPage < totalPages - 1 && (
-                  <button
-                    className="num-btn"
-                    onClick={() => setCurrentPage((prev) => prev + 2)}
-                  >
-                    {currentPage + 2}
-                  </button>
-                )}
-                {currentPage < totalPages - 2 && (
-                  <button
-                    className="num-btn"
-                    onClick={() => setCurrentPage((prev) => prev + 3)}
-                  >
-                    {currentPage + 3}
-                  </button>
-                )}
-                <button
-                  className="next-btn"
-                  onClick={() =>
-                    setCurrentPage((prev) =>
-                      prev < totalPages ? prev + 1 : prev
-                    )
-                  }
-                >
-                  Next
-                </button>
-              </div>
-              <div className="goto">
+            <div className="search">
+              <form>
                 <input
-                  type="number"
-                  placeholder="Page No."
-                  onChange={(e) => setGoto(Number(e.target.value))}
-                  min="1"
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <button
-                  onClick={() => {
-                    if (!goto || goto > totalPages || goto < 1) {
-                      alert("Page Not Found!");
-                    } else {
-                      setCurrentPage(goto);
-                    }
-                  }}
-                >
-                  Go
-                </button>
-              </div>
+                <button type="submit">Search</button>
+              </form>
             </div>
+            <ProductTable
+              currentProducts={currentProducts}
+              indexOfFirstProduct={indexOfFirstProduct}
+              handleDelete={handleDelete}
+              onEdit={onEdit}
+            />
+            <ProductPagination
+              setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              setGoto={setGoto}
+              goto={goto}
+            ></ProductPagination>
           </div>
         </div>
       </div>

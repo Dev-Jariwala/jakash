@@ -8,6 +8,7 @@ const Product = ({
   stock,
   onDelete,
   onEdit,
+  productId,
 }) => {
   return (
     <>
@@ -18,8 +19,8 @@ const Product = ({
       <td>{stock ? stock : "-"}</td>
       <td>
         <div className="action">
-          <button onClick={() => onEdit(productIndex)}>Edit</button>
-          <button onClick={() => onDelete(productIndex)}>Delete</button>
+          <button onClick={() => onEdit(productId)}>Edit</button>
+          <button onClick={() => onDelete(productId)}>Delete</button>
         </div>
       </td>
     </>
