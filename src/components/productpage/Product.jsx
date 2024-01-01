@@ -7,19 +7,34 @@ const Product = ({
   onEdit,
   productId,
   isAdmin,
+  onStockAdding,
 }) => {
-  const { productName, costPrice, retailPrice, wholesalePrice, stock } =
-    product;
+  const {
+    productName,
+    retailPrice,
+    wholesalePrice,
+    stock,
+    totalStock,
+    AvgCostPrice,
+  } = product;
   return (
     <>
       <td>{productIndex + 1}</td>
       <td>{productName ? productName : "-"}</td>
-      {isAdmin && <td>{costPrice ? costPrice : "-"} Rs</td>}
-      <td>{retailPrice ? retailPrice : "-"} Rs</td>
-      <td>{wholesalePrice ? wholesalePrice : "-"} Rs</td>
-      <td>{stock ? stock : "-"}</td>
+      {isAdmin && <td>{AvgCostPrice} Rs</td>}
+      <td>{retailPrice} Rs</td>
+      <td>{wholesalePrice} Rs</td>
+      <td>{stock}</td>
+      {isAdmin && <td> {totalStock} </td>}
       <td>
         <div className="action">
+          <button
+            onClick={() => {
+              onStockAdding(productId);
+            }}
+          >
+            Add
+          </button>
           <button onClick={() => onEdit(productId)} disabled={!isAdmin}>
             Edit
           </button>

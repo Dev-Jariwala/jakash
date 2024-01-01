@@ -7,6 +7,7 @@ const ProductTable = ({
   handleDelete,
   onEdit,
   isAdmin,
+  onStockAdding,
 }) => {
   return (
     <table border="1px">
@@ -14,10 +15,11 @@ const ProductTable = ({
         <tr>
           <th>NO.</th>
           <th>Product Name</th>
-          {isAdmin && <th>Cost Price</th>}
+          {isAdmin && <th>Avg. Cost Price</th>}
           <th>Retail Price</th>
           <th>Wholesale Price</th>
           <th>Stock</th>
+          {isAdmin && <th>Total Stock</th>}
           <th>Action</th>
         </tr>
       </thead>
@@ -34,6 +36,7 @@ const ProductTable = ({
                   onEdit={onEdit}
                   productId={product._id}
                   isAdmin={isAdmin}
+                  onStockAdding={onStockAdding}
                 />
               </tr>
             );

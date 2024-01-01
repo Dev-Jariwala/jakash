@@ -15,6 +15,7 @@ import WholeSaleBill from "./pages/WholeSaleBill";
 import AdminPage from "./pages/AdminPage";
 import Navbar from "./components/navbar/Navbar";
 import "./index.css";
+import { StockProvider } from "./store/stockContext";
 
 const NotFound = () => {
   return (
@@ -29,14 +30,16 @@ export default function App() {
   return (
     <BrowserRouter>
       <ProductsProvider>
-        <Navbar></Navbar>
-        <Routes>
-          <Route path="/products" element={<ProductPage />}></Route>
-          <Route path="/wholesalebill" element={<WholeSaleBill />}></Route>
-          <Route path="/retailbill" element={<RetailBillPage />}></Route>
-          <Route path="/admin" element={<AdminPage />}></Route>
-          <Route path="*" element={<NotFound />}></Route>
-        </Routes>
+        <StockProvider>
+          <Navbar></Navbar>
+          <Routes>
+            <Route path="/products" element={<ProductPage />}></Route>
+            <Route path="/wholesalebill" element={<WholeSaleBill />}></Route>
+            <Route path="/retailbill" element={<RetailBillPage />}></Route>
+            <Route path="/admin" element={<AdminPage />}></Route>
+            <Route path="*" element={<NotFound />}></Route>
+          </Routes>
+        </StockProvider>
       </ProductsProvider>
     </BrowserRouter>
   );

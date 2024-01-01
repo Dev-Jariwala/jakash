@@ -7,6 +7,7 @@ import ProductTable from "../components/productpage/ProductTable";
 import { ProductsContext } from "../store/productContext";
 import axios from "axios";
 import BACKEND_URL from "../assets/BACKEND_URL";
+import Stock from "../components/productpage/Stock";
 
 const ProductPage = () => {
   // useState variables....
@@ -14,17 +15,22 @@ const ProductPage = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [addingProduct, setAddingProduct] = useState(false);
   const [editingProduct, setEditingProduct] = useState(false);
-  const [editProduct, setEditProduct] = useState({});
+  const [editProduct, setEditProduct] = useState({
+    _id: "",
+    productName: "",
+    addStock: 0,
+    costPrice: 0,
+  });
   const [newProduct, setNewProduct] = useState({
     productName: "",
-    costPrice: 0,
     retailPrice: 0,
     wholesalePrice: 0,
-    stock: 0,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [goto, setGoto] = useState(currentPage);
   const [searchQuery, setSearchQuery] = useState("");
+  const [addingStock, setAddingStock] = useState(false);
+  const [stockForm, setStockForm] = useState({});
 
   // pagination calculation
   const PAGE_SIZE = 5;
@@ -69,10 +75,8 @@ const ProductPage = () => {
         setProducts(response.data.products);
         setNewProduct({
           productName: "",
-          costPrice: 0,
           retailPrice: 0,
           wholesalePrice: 0,
-          stock: 0,
         });
         setAddingProduct(() => false);
       } else {
@@ -89,15 +93,48 @@ const ProductPage = () => {
             return {
               _id: product._id,
               productName: product.productName,
-              costPrice: product.costPrice,
               retailPrice: product.retailPrice,
               wholesalePrice: product.wholesalePrice,
-              stock: product.stock,
             };
           });
         }
       });
     });
+  }
+  function onStockAdding(productId) {
+    setAddingStock(true);
+    products.map((product) => {
+      if (productId === product._id) {
+        setStockForm(() => {
+          return {
+            _id: product._id,
+            productName: product.productName,
+          };
+        });
+      }
+    });
+  }
+  async function handleStock(e, productId) {
+    try {
+      e.preventDefault();
+      await axios.post(
+        `${BACKEND_URL}stock/add-stock/${productId}`,
+        {
+          productName: stockForm.productName,
+          date: stockForm.date,
+          costPrice: Number(stockForm.costPrice),
+          addStock: Number(stockForm.addStock),
+        },
+        { withCredentials: true }
+      );
+
+      const response = await axios.get(
+        `${BACKEND_URL}product/fetch-allProducts`
+      );
+      setProducts(response.data.products);
+
+      setAddingStock(false);
+    } catch (error) {}
   }
   async function handleEdit(e, productId) {
     try {
@@ -106,10 +143,8 @@ const ProductPage = () => {
         `${BACKEND_URL}product/update-product/${productId}`,
         {
           productName: editProduct.productName,
-          costPrice: editProduct.costPrice,
           retailPrice: editProduct.retailPrice,
           wholesalePrice: editProduct.wholesalePrice,
-          stock: editProduct.stock,
         },
         { withCredentials: true }
       );
@@ -189,27 +224,8 @@ const ProductPage = () => {
                     <input
                       type="number"
                       placeholder="Stock"
-                      value={newProduct.stock}
-                      onChange={(e) =>
-                        setNewProduct((prev) => {
-                          return { ...prev, stock: e.target.value };
-                        })
-                      }
-                    />
-                  </label>
-                </div>
-                <div className="f-row">
-                  <label>
-                    Cost Price:
-                    <input
-                      type="number"
-                      placeholder="Cost Price"
-                      value={newProduct.costPrice}
-                      onChange={(e) =>
-                        setNewProduct((prev) => {
-                          return { ...prev, costPrice: e.target.value };
-                        })
-                      }
+                      value={0}
+                      readOnly={true}
                     />
                   </label>
                 </div>
@@ -281,9 +297,52 @@ const ProductPage = () => {
                       type="number"
                       placeholder="Stock"
                       value={editProduct.stock}
+                      readOnly={true}
+                    />
+                  </label>
+                </div>
+              </form>
+            </div>
+          )}
+          {addingStock && (
+            <div className="product-form">
+              <form
+                onSubmit={(e) => {
+                  handleStock(e, stockForm._id);
+                }}
+              >
+                <div className="pf-title">
+                  <h4>Add Stock in product: </h4>
+                  <div>
+                    <button type="submit">Add Stock</button>
+                    <button
+                      style={{ marginLeft: "10px" }}
+                      onClick={() => {
+                        setAddingStock(false);
+                      }}
+                    >
+                      Cancle
+                    </button>
+                  </div>
+                </div>
+                <div className="f-row">
+                  <label>
+                    Product Name:
+                    <input
+                      type="text"
+                      placeholder="Product Name"
+                      value={stockForm.productName}
+                    />
+                  </label>
+                  <label>
+                    Cost Price:
+                    <input
+                      type="number"
+                      placeholder="Cost Price"
+                      value={stockForm.costPrice}
                       onChange={(e) =>
-                        setEditProduct((prev) => {
-                          return { ...prev, stock: e.target.value };
+                        setStockForm((prev) => {
+                          return { ...prev, costPrice: e.target.value };
                         })
                       }
                     />
@@ -291,17 +350,21 @@ const ProductPage = () => {
                 </div>
                 <div className="f-row">
                   <label>
-                    Cost Price:
+                    Stock:
                     <input
                       type="number"
-                      placeholder="Cost Price"
-                      value={editProduct.costPrice}
+                      placeholder="Stock"
+                      value={stockForm.addStock}
                       onChange={(e) =>
-                        setEditProduct((prev) => {
-                          return { ...prev, costPrice: e.target.value };
+                        setStockForm((prev) => {
+                          return { ...prev, addStock: e.target.value };
                         })
                       }
                     />
+                  </label>
+                  <label>
+                    Date:
+                    <input type="date" value={stockForm.date} />
                   </label>
                 </div>
               </form>
@@ -343,6 +406,7 @@ const ProductPage = () => {
               handleDelete={handleDelete}
               onEdit={onEdit}
               isAdmin={isAdmin}
+              onStockAdding={onStockAdding}
             />
             <ProductPagination
               setCurrentPage={setCurrentPage}
@@ -352,6 +416,7 @@ const ProductPage = () => {
               goto={goto}
             ></ProductPagination>
           </div>
+          <Stock></Stock>
         </div>
       </div>
     </ProductsContext.Provider>
