@@ -1,16 +1,15 @@
 import React, { useContext } from "react";
-import Stock from "../components/stockPage/Stock";
 import { ThemeContext } from "../store/themeContext";
-const StockPage = () => {
+
+const DashBoard = () => {
   const { darkMode } = useContext(ThemeContext);
   return (
     <div className="stock-page">
       <div className={`p-title ${darkMode ? "dark" : ""}`}>
-        <h2>Stock Page</h2>
+        <h2>Dashboard Page</h2>
       </div>
-      <Stock></Stock>
     </div>
   );
 };
 
-export default StockPage;
+export default DashBoard;

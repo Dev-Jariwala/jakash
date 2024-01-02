@@ -18,9 +18,44 @@
     --toggle-color: #ddd;
     --text-color: #707070;
 
+    /* ===== My colors ====== */
+    --myprimary-color: #11235A;
     /* ====== Transition ====== */
     --tran-03: all 0.2s ease;
     --tran-03: all 0.3s ease;
     --tran-04: all 0.3s ease;
     --tran-05: all 0.3s ease;
+}
+
+.body.dark {
+    --body-color: #18191a;
+    --sidebar-color: #242526;
+    /* ===== My colors ====== */
+    --myprimary-color: #242526;
+    --myprimary-color-light: #707070;
+    --primary-color: #3a3b3c;
+    --primary-color-light: #3a3b3c;
+    --toggle-color: #fff;
+    --text-color: #ccc;
+}
+
+.body {
+    min-height: 100vh;
+    background-color: var(--body-color);
+    transition: var(--tran-05);
+}
+
+::selection {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+
+
+.p-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 50px;
+    color: var(--text-color);
 }

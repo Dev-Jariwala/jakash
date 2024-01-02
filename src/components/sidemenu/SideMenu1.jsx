@@ -41,37 +41,30 @@ const SideMenu1 = ({ children }) => {
 
             <ul className="menu-links">
               <li className="nav-link">
-                <a href="#">
+                <Link to={"/"}>
                   <i className="bx bx-home-alt icon"></i>
                   <span className="text nav-text">Dashboard</span>
-                </a>
-              </li>
-
-              <li className="nav-link">
-                <a href="#">
-                  <i className="bx bx-bar-chart-alt-2 icon"></i>
-                  <span className="text nav-text">Revenue</span>
-                </a>
+                </Link>
               </li>
 
               <li className="nav-link">
                 <Link to={"/products"}>
-                  <i className="bx bxl-product-hunt icon"></i>
+                  <i class="material-icons icon">shopping_cart</i>
                   <span className="text nav-text">Products</span>
                 </Link>
               </li>
 
               <li className="nav-link">
                 <Link to={"/stocks"}>
-                  <i className="bx bx-pie-chart-alt icon"></i>
+                  <i class="material-icons icon">leaderboard</i>
                   <span className="text nav-text">Stocks</span>
                 </Link>
               </li>
 
               <li className="nav-link">
                 <a href="#">
-                  <i className="bx bx-heart icon"></i>
-                  <span className="text nav-text">Likes</span>
+                  <i class="material-icons icon">receipt_long</i>
+                  <span className="text nav-text">Bills</span>
                 </a>
               </li>
 

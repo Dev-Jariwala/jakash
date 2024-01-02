@@ -40,16 +40,21 @@
     background-color: #f6f7f9;
 }
 
-.table-container tbody tr:nth-child(even) td {
-    background-color: #f6f7f9;
+.table-container tbody tr:nth-child(odd) td {
+    background-color: #EEF5FF;
 
 }
 
 .table-container .table-head {
-    background-color: #11235A;
+    /* background-color: #11235A; */
+    background-color: var(--myprimary-color);
     padding: 15px 20px;
     font-weight: 500;
     color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
 }
 
 /* Page Size Dropdown Styles */
@@ -68,14 +73,16 @@
     cursor: pointer;
     border: 1px solid transparent;
     border-radius: 4px;
-    color: #007bff;
+    /* color: #007bff; */
+    color: var(--primary-color);
     background-color: #fff;
     transition: all ease;
     font-family: 'Reem Kufi', sans-serif;
 }
 
 .table-container button:hover {
-    background-color: #f2f2f2;
+    background-color: #007bff;
+    color: white;
 }
 
 /* Outlined Success Button */

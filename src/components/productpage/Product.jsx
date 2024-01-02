@@ -4,7 +4,14 @@ import ProductPagination from "./ProductPagination";
 import axios from "axios";
 import BACKEND_URL from "../../assets/BACKEND_URL";
 
-const Product = ({ products, setProducts, onEdit, onStockAdding }) => {
+const Product = ({
+  products,
+  setProducts,
+  onEdit,
+  onStockAdding,
+  formState,
+  setFormState,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [goto, setGoto] = useState(currentPage);
   const [searchQuery, setSearchQuery] = useState("");
@@ -34,7 +41,18 @@ const Product = ({ products, setProducts, onEdit, onStockAdding }) => {
   }
   return (
     <div className="table-container">
-      <div className="table-head">Product Table : </div>
+      <div className="table-head">
+        <div>Product Table : </div>
+        <button
+          onClick={() =>
+            formState === "addingProduct"
+              ? setFormState("")
+              : setFormState("addingProduct")
+          }
+        >
+          {formState === "addingProduct" ? "Cancle" : "New Product"}
+        </button>
+      </div>
       <div className="table-content">
         <div className="table-features">
           <div className="page-size-dropdown">
