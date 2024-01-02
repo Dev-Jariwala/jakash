@@ -4,11 +4,12 @@ import "./ProductPage.css";
 import { ProductsContext } from "../store/productContext";
 import axios from "axios";
 import BACKEND_URL from "../assets/BACKEND_URL";
-import Stock from "../components/stockPage/Stock";
 import { StockContext } from "../store/stockContext";
 import "./table.css";
+import { ThemeContext } from "../store/themeContext";
 
 const ProductPage = () => {
+  const { darkMode } = useContext(ThemeContext);
   const { products, setProducts } = useContext(ProductsContext);
   const { setStocks } = useContext(StockContext);
   const [addingProduct, setAddingProduct] = useState(false);
@@ -133,7 +134,7 @@ const ProductPage = () => {
   }
   return (
     <div className="product-page">
-      <div className="p-title">
+      <div className={`p-title ${darkMode ? "dark" : ""}`}>
         <h2>Products Page</h2>
         <button onClick={() => setAddingProduct((prev) => !prev)}>
           {addingProduct ? "Cancle" : "New Product"}
@@ -346,7 +347,6 @@ const ProductPage = () => {
         onEdit={onEdit}
         onStockAdding={onStockAdding}
       />
-      <Stock></Stock>
     </div>
   );
 };

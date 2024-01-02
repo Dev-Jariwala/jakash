@@ -5,6 +5,10 @@
     padding: 20px 50px;
 }
 
+.dark.p-title {
+    color: white;
+}
+
 .p-title button {
     padding: 10px 15px;
 }
