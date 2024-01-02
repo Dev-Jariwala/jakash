@@ -1,11 +1,11 @@
 import React from "react";
 
-const ProductPagination = ({
-  setCurrentPage,
+const StockPagination = ({
   currentPage,
+  setCurrentPage,
   totalPages,
-  setGoto,
   goto,
+  setGoto,
 }) => {
   return (
     <div className="pagination">
@@ -17,14 +17,20 @@ const ProductPagination = ({
           Previous
         </button>
         {currentPage > 1 && (
-          <button onClick={() => setCurrentPage((prev) => prev - 1)}>
+          <button
+            className=""
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+          >
             {currentPage - 1}
           </button>
         )}
-        <button className={`${true ? "active" : ""}`}>{currentPage}</button>
+        <button className={"active"}>{currentPage}</button>
 
         {currentPage < totalPages && (
-          <button onClick={() => setCurrentPage((prev) => prev + 1)}>
+          <button
+            className=""
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+          >
             {currentPage + 1}
           </button>
         )}
@@ -76,4 +82,4 @@ const ProductPagination = ({
   );
 };
 
-export default ProductPagination;
+export default StockPagination;

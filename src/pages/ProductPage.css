@@ -9,32 +9,7 @@
     padding: 10px 15px;
 }
 
-.products {
-    /* background-color: red; */
-    display: flex;
-    flex-direction: column;
-    padding: 20px 50px;
-}
 
-.product-table {
-    /* background-color: yellow; */
-
-}
-
-.product-table table {
-    /* background-color: yellowgreen; */
-    width: 70%;
-    margin: 10px auto;
-}
-
-.product-table table th {
-    padding: 5px 0;
-}
-
-.product-table table td {
-    text-align: center;
-    padding: 5px 0;
-}
 
 .action button {
     margin: 0 10px;
@@ -85,64 +60,4 @@
 
 .product-form form button {
     padding: 10px 15px;
-}
-
-.pagination {
-    margin: auto;
-    width: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.pagination .prev-btn,
-.pagination .next-btn {
-    padding: 5px 10px;
-    margin-right: 10px;
-}
-
-.pagination .num-btn {
-    padding: 5px 10px;
-    margin-right: 10px;
-}
-
-.pagination .goto input {
-    width: 100px;
-    padding: 5px 10px;
-}
-
-.pagination .goto button {
-    padding: 5px 10px;
-    margin-left: 10px;
-}
-
-.search {
-    /* background-color: red; */
-    display: flex;
-    width: 70%;
-    margin: auto;
-    justify-content: space-between;
-}
-
-.search button {
-    padding: 5px 10px;
-}
-
-.search form {
-    display: flex;
-    align-items: center;
-    /* justify-content: end; */
-    /* background-color: yellow; */
-    /* width: 70%; */
-    /* margin: auto; */
-
-}
-
-.search form input {
-    padding: 5px 20px;
-}
-
-.search form button {
-    padding: 5px 10px;
-    margin-left: 20px;
 }

@@ -1,6 +1,5 @@
 import React from "react";
-import Product from "./Product";
-
+import ProductDetail from "./ProductDetail";
 const ProductTable = ({
   currentProducts,
   indexOfFirstProduct,
@@ -10,16 +9,16 @@ const ProductTable = ({
   onStockAdding,
 }) => {
   return (
-    <table border="1px">
+    <table className="table" border="1px">
       <thead>
         <tr>
           <th>NO.</th>
           <th>Product Name</th>
-          {isAdmin && <th>Avg. Cost Price</th>}
+          {<th>Avg. Cost Price</th>}
           <th>Retail Price</th>
           <th>Wholesale Price</th>
           <th>Stock</th>
-          {isAdmin && <th>Total Stock</th>}
+          {<th>Total Stock</th>}
           <th>Action</th>
         </tr>
       </thead>
@@ -29,7 +28,7 @@ const ProductTable = ({
             const productNumber = indexOfFirstProduct + productIndex;
             return (
               <tr key={productIndex}>
-                <Product
+                <ProductDetail
                   product={product}
                   productIndex={productNumber}
                   onDelete={handleDelete}
