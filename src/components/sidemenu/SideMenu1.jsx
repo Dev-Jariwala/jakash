@@ -62,10 +62,10 @@ const SideMenu1 = ({ children }) => {
               </li>
 
               <li className="nav-link">
-                <a href="#">
+                <Link to={"/bills"}>
                   <i class="material-icons icon">receipt_long</i>
                   <span className="text nav-text">Bills</span>
-                </a>
+                </Link>
               </li>
 
               <li className="nav-link">

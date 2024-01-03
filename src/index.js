@@ -16,6 +16,7 @@ import SideMenu1 from "./components/sidemenu/SideMenu1";
 import StockPage from "./pages/StockPage";
 import { ThemeProvider } from "./store/themeContext";
 import DashBoard from "./pages/DashBoard";
+import BillsPage from "./pages/BillsPage";
 
 const NotFound = () => {
   return (
@@ -38,6 +39,7 @@ export default function App() {
                 <Route path="/" element={<DashBoard></DashBoard>}></Route>
                 <Route path="/products" element={<ProductPage />}></Route>
                 <Route path="/stocks" element={<StockPage />}></Route>
+                <Route path="/bills" element={<BillsPage />} />
                 <Route path="*" element={<NotFound />}></Route>
               </Routes>
             </SideMenu1>

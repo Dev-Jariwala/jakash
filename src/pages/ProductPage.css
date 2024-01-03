@@ -1,8 +1,8 @@
 /* CSS for the form displayed in the Modal */
 
 .form-container {
-    width: 100%;
-    max-width: 400px;
+    width: 400px;
+    /* max-width: 400px; */
     padding: 20px;
     background-color: #fff;
     border-radius: 8px;
