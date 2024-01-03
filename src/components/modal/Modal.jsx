@@ -12,7 +12,7 @@ const Modal = ({ isOpen, onClose, children }) => {
         }}
       >
         <div className="modal-content">
-          <i class="material-icons modal-close" onClick={onClose}>
+          <i className="material-icons modal-close" onClick={onClose}>
             close
           </i>
           <div className="modal-body">{children}</div>

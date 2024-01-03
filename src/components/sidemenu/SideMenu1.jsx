@@ -49,21 +49,21 @@ const SideMenu1 = ({ children }) => {
 
               <li className="nav-link">
                 <Link to={"/products"}>
-                  <i class="material-icons icon">shopping_cart</i>
+                  <i className="material-icons icon">shopping_cart</i>
                   <span className="text nav-text">Products</span>
                 </Link>
               </li>
 
               <li className="nav-link">
                 <Link to={"/stocks"}>
-                  <i class="material-icons icon">leaderboard</i>
+                  <i className="material-icons icon">leaderboard</i>
                   <span className="text nav-text">Stocks</span>
                 </Link>
               </li>
 
               <li className="nav-link">
                 <Link to={"/bills"}>
-                  <i class="material-icons icon">receipt_long</i>
+                  <i className="material-icons icon">receipt_long</i>
                   <span className="text nav-text">Bills</span>
                 </Link>
               </li>

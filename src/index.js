@@ -17,6 +17,7 @@ import StockPage from "./pages/StockPage";
 import { ThemeProvider } from "./store/themeContext";
 import DashBoard from "./pages/DashBoard";
 import BillsPage from "./pages/BillsPage";
+import { RetailBillProvider } from "./store/retailBillContext";
 
 const NotFound = () => {
   return (
@@ -33,16 +34,17 @@ export default function App() {
       <ThemeProvider>
         <ProductsProvider>
           <StockProvider>
-            {/* <Navbar></Navbar> */}
-            <SideMenu1>
-              <Routes>
-                <Route path="/" element={<DashBoard></DashBoard>}></Route>
-                <Route path="/products" element={<ProductPage />}></Route>
-                <Route path="/stocks" element={<StockPage />}></Route>
-                <Route path="/bills" element={<BillsPage />} />
-                <Route path="*" element={<NotFound />}></Route>
-              </Routes>
-            </SideMenu1>
+            <RetailBillProvider>
+              <SideMenu1>
+                <Routes>
+                  <Route path="/" element={<DashBoard></DashBoard>}></Route>
+                  <Route path="/products" element={<ProductPage />}></Route>
+                  <Route path="/stocks" element={<StockPage />}></Route>
+                  <Route path="/bills" element={<BillsPage />} />
+                  <Route path="*" element={<NotFound />}></Route>
+                </Routes>
+              </SideMenu1>
+            </RetailBillProvider>
           </StockProvider>
         </ProductsProvider>
       </ThemeProvider>

@@ -140,7 +140,7 @@ const ProductPage = () => {
         isOpen={formState === "addingProduct"}
         onClose={() => setFormState("")}
       >
-        <div class="form-container">
+        <div className="form-container">
           <form onSubmit={(e) => handleSubmit(e)}>
             <h4>Enter Product details:</h4>
             <div>
@@ -203,7 +203,7 @@ const ProductPage = () => {
         isOpen={formState === "editingProduct"}
         onClose={() => setFormState("")}
       >
-        <div class="form-container">
+        <div className="form-container">
           <form onSubmit={(e) => handleEdit(e, editProduct._id)}>
             <h4>Edit Product details:</h4>
             <div>
@@ -266,7 +266,7 @@ const ProductPage = () => {
         isOpen={formState === "addingStock"}
         onClose={() => setFormState("")}
       >
-        <div class="form-container">
+        <div className="form-container">
           <form
             onSubmit={(e) => {
               handleStock(e, stockForm._id);

@@ -9,7 +9,7 @@ const WholeSale = () => {
     <>
       <div className="bill">
         <Modal isOpen={creatingBill} onClose={() => setCreatingBill(false)}>
-          <div class="form-container bill">
+          <div className="form-container bill">
             <h4>Enter WholeSale Bill details:</h4>
             <form>
               <div className="form-row">
