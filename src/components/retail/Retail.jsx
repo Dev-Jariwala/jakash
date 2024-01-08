@@ -28,37 +28,27 @@ const Retail = () => {
   });
   const [showPDF, setShowPDF] = useState({
     status: false,
-    bill: {
-      BillNo: 1,
-      orderDate: "2024-01-08T00:00:00.000+00:00",
-      name: "Dev Jariwala",
-      address: "26 Laxmi krupa society",
-      mobileNumber: 7990176865,
-      deliveryDate: "2024-01-10T00:00:00.000+00:00",
-
-      products: [
-        {
-          productId: "659ac30338978688ef38a588",
-          productName: "Firki 1",
-          quantity: 1,
-          price: 500,
-          _id: "659b844fd1e44a9aa826e775",
-        },
-        {
-          productId: "659ac31138978688ef38a58b",
-          productName: "Firki 2",
-          quantity: 1,
-          price: 400,
-          _id: "659b844fd1e44a9aa826e776",
-        },
-      ],
-      totalFirki: 2,
-      subTotal: 900,
-      discount: 0,
-      advance: 0,
-      totalDue: 900,
-    },
+    bill: {},
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [goto, setGoto] = useState(currentPage);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pageSize, setPageSize] = useState(5);
+  // pagination calculation
+  const PAGE_SIZE = pageSize;
+  const totalPages = Math.ceil(retailBills.length / PAGE_SIZE);
+  const indexOfLastProduct = currentPage * PAGE_SIZE;
+  const indexOfFirstProduct = indexOfLastProduct - PAGE_SIZE;
+  const filteredProducts = retailBills.filter((product) =>
+    Object.values(product).some((value) =>
+      String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   function onEdit(billId) {
     setEditingBill(true);
@@ -120,7 +110,10 @@ const Retail = () => {
         <div className="table-content">
           <div className="table-features">
             <div className="page-size-dropdown">
-              <select id="pageSize">
+              <select
+                id="pageSize"
+                onChange={(e) => setPageSize(e.target.value)}
+              >
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
@@ -128,13 +121,27 @@ const Retail = () => {
             </div>
             <div className="search-bar">
               <form>
-                <input type="text" placeholder="Search" />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </form>
             </div>
           </div>
 
-          <RetailTable onEdit={onEdit}></RetailTable>
-          <ReatilPagination></ReatilPagination>
+          <RetailTable
+            onEdit={onEdit}
+            currentProducts={currentProducts}
+          ></RetailTable>
+          <ReatilPagination
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setGoto={setGoto}
+            goto={goto}
+          ></ReatilPagination>
         </div>
       </div>
     </>

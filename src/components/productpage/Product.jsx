@@ -15,8 +15,9 @@ const Product = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [goto, setGoto] = useState(currentPage);
   const [searchQuery, setSearchQuery] = useState("");
+  const [pageSize, setPageSize] = useState(5);
   // pagination calculation
-  const PAGE_SIZE = 5;
+  const PAGE_SIZE = pageSize;
   const totalPages = Math.ceil(products.length / PAGE_SIZE);
   const indexOfLastProduct = currentPage * PAGE_SIZE;
   const indexOfFirstProduct = indexOfLastProduct - PAGE_SIZE;
@@ -56,7 +57,7 @@ const Product = ({
       <div className="table-content">
         <div className="table-features">
           <div className="page-size-dropdown">
-            <select id="pageSize">
+            <select id="pageSize" onChange={(e) => setPageSize(e.target.value)}>
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>

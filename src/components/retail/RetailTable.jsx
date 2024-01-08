@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
-import { RetailBillContext } from "../../store/retailBillContext";
 import RetailDetail from "./RetailDetail";
 
-const RetailTable = ({ onEdit }) => {
-  const { retailBills } = useContext(RetailBillContext);
+const RetailTable = ({ onEdit, currentProducts }) => {
   //   console.log(retailBills);
   return (
     <table className="table">
@@ -18,8 +16,8 @@ const RetailTable = ({ onEdit }) => {
         </tr>
       </thead>
       <tbody>
-        {retailBills &&
-          retailBills.map((bill) => {
+        {currentProducts &&
+          currentProducts.map((bill) => {
             return (
               <RetailDetail
                 key={bill.BillNo}
