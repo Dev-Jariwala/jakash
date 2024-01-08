@@ -22,8 +22,8 @@ const ProductPage = () => {
   });
   const [newProduct, setNewProduct] = useState({
     productName: "",
-    retailPrice: 0,
-    wholesalePrice: 0,
+    retailPrice: "",
+    wholesalePrice: "",
   });
 
   const [stockForm, setStockForm] = useState({});
@@ -33,7 +33,13 @@ const ProductPage = () => {
   async function handleSubmit(e) {
     try {
       e.preventDefault();
-      if (newProduct.productName.trim() !== "") {
+      if (
+        newProduct.productName.trim() === "" ||
+        newProduct.retailPrice < 0 ||
+        newProduct.wholesalePrice < 0
+      ) {
+        alert("negative values not allowed!");
+      } else {
         await axios.post(
           `${BACKEND_URL}product/create-product`,
           {
@@ -51,8 +57,6 @@ const ProductPage = () => {
           wholesalePrice: 0,
         });
         setFormState("");
-      } else {
-        alert("Fill all Details correctly!");
       }
     } catch (error) {}
   }
@@ -89,46 +93,57 @@ const ProductPage = () => {
   async function handleStock(e, productId) {
     try {
       e.preventDefault();
-      await axios.post(
-        `${BACKEND_URL}stock/add-stock/${productId}`,
-        {
-          productName: stockForm.productName,
-          date: stockForm.date,
-          costPrice: Number(stockForm.costPrice),
-          addStock: Number(stockForm.addStock),
-        },
-        { withCredentials: true }
-      );
+      if (stockForm.addStock < 0) {
+        alert("negative values not allowed!");
+      } else {
+        await axios.post(
+          `${BACKEND_URL}stock/add-stock/${productId}`,
+          {
+            productName: stockForm.productName,
+            date: stockForm.date,
+            addStock: Number(stockForm.addStock),
+          },
+          { withCredentials: true }
+        );
 
-      const response = await axios.get(
-        `${BACKEND_URL}product/fetch-allProducts`
-      );
-      setProducts(response.data.products);
-      const res = await axios.get(`${BACKEND_URL}stock/fetch-allStocks`);
-      setStocks(res.data.stocks);
+        const response = await axios.get(
+          `${BACKEND_URL}product/fetch-allProducts`
+        );
+        setProducts(response.data.products);
+        const res = await axios.get(`${BACKEND_URL}stock/fetch-allStocks`);
+        setStocks(res.data.stocks.reverse());
 
-      setFormState("");
+        setFormState("");
+      }
     } catch (error) {}
   }
   async function handleEdit(e, productId) {
     try {
       e.preventDefault();
-      await axios.put(
-        `${BACKEND_URL}product/update-product/${productId}`,
-        {
-          productName: editProduct.productName,
-          retailPrice: editProduct.retailPrice,
-          wholesalePrice: editProduct.wholesalePrice,
-        },
-        { withCredentials: true }
-      );
+      if (
+        editProduct.productName.trim() === "" ||
+        editProduct.retailPrice < 0 ||
+        editProduct.wholesalePrice < 0
+      ) {
+        alert("negative values not allowed!");
+      } else {
+        await axios.put(
+          `${BACKEND_URL}product/update-product/${productId}`,
+          {
+            productName: editProduct.productName,
+            retailPrice: editProduct.retailPrice,
+            wholesalePrice: editProduct.wholesalePrice,
+          },
+          { withCredentials: true }
+        );
 
-      const response = await axios.get(
-        `${BACKEND_URL}product/fetch-allProducts`
-      );
-      setProducts(response.data.products);
+        const response = await axios.get(
+          `${BACKEND_URL}product/fetch-allProducts`
+        );
+        setProducts(response.data.products);
 
-      setFormState("");
+        setFormState("");
+      }
     } catch (error) {}
   }
   return (
@@ -153,9 +168,10 @@ const ProductPage = () => {
                   onChange={(e) =>
                     setNewProduct((prev) => ({
                       ...prev,
-                      productName: e.target.value,
+                      productName: String(e.target.value),
                     }))
                   }
+                  required
                 />
               </label>
               <label>
@@ -164,12 +180,13 @@ const ProductPage = () => {
                   type="number"
                   placeholder="Retail Price"
                   value={newProduct.retailPrice}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setNewProduct((prev) => ({
                       ...prev,
-                      retailPrice: e.target.value,
-                    }))
-                  }
+                      retailPrice: parseFloat(e.target.value),
+                    }));
+                  }}
+                  required
                 />
               </label>
             </div>
@@ -183,9 +200,10 @@ const ProductPage = () => {
                   onChange={(e) =>
                     setNewProduct((prev) => ({
                       ...prev,
-                      wholesalePrice: e.target.value,
+                      wholesalePrice: parseFloat(e.target.value),
                     }))
                   }
+                  required
                 />
               </label>
               <label>
@@ -216,9 +234,10 @@ const ProductPage = () => {
                   onChange={(e) =>
                     setEditProduct((prev) => ({
                       ...prev,
-                      productName: e.target.value,
+                      productName: String(e.target.value),
                     }))
                   }
+                  required
                 />
               </label>
               <label>
@@ -230,9 +249,10 @@ const ProductPage = () => {
                   onChange={(e) =>
                     setEditProduct((prev) => ({
                       ...prev,
-                      retailPrice: e.target.value,
+                      retailPrice: parseFloat(e.target.value),
                     }))
                   }
+                  required
                 />
               </label>
             </div>
@@ -246,9 +266,10 @@ const ProductPage = () => {
                   onChange={(e) =>
                     setEditProduct((prev) => ({
                       ...prev,
-                      wholesalePrice: e.target.value,
+                      wholesalePrice: parseFloat(e.target.value),
                     }))
                   }
+                  required
                 />
               </label>
               <label>
@@ -280,19 +301,7 @@ const ProductPage = () => {
                   type="text"
                   placeholder="Product Name"
                   value={stockForm.productName}
-                />
-              </label>
-              <label>
-                Cost Price:
-                <input
-                  type="number"
-                  placeholder="Cost Price"
-                  value={stockForm.costPrice}
-                  onChange={(e) =>
-                    setStockForm((prev) => {
-                      return { ...prev, costPrice: e.target.value };
-                    })
-                  }
+                  disabled
                 />
               </label>
             </div>
@@ -303,20 +312,29 @@ const ProductPage = () => {
                   type="number"
                   placeholder="Stock"
                   value={stockForm.addStock}
-                  onChange={(e) =>
+                  onChange={(e) => {
                     setStockForm((prev) => {
-                      return { ...prev, addStock: e.target.value };
-                    })
-                  }
+                      return { ...prev, addStock: parseFloat(e.target.value) };
+                    });
+                  }}
+                  required
                 />
               </label>
               <label>
                 Date:
-                <input type="date" value={stockForm.date} />
+                <input
+                  type="date"
+                  value={stockForm.date}
+                  onChange={(e) =>
+                    setStockForm((prev) => {
+                      return { ...prev, date: e.target.value };
+                    })
+                  }
+                />
               </label>
             </div>
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <button type="submit">Update Product</button>
+              <button type="submit">Add Stock</button>
             </div>
           </form>
         </div>

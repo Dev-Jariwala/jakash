@@ -8,9 +8,20 @@ import { ThemeContext } from "../../store/themeContext";
 const SideMenu1 = ({ children }) => {
   const { darkMode, setDarkMode } = useContext(ThemeContext);
   const [sidebar, setSidebar] = useState(false);
+  const handleSidebarOpen = () => {
+    setSidebar(true);
+  };
+
+  const handleSidebarClose = () => {
+    setSidebar(false);
+  };
   return (
     <div className={`body ${darkMode ? "dark" : ""}`}>
-      <nav className={`sidebar ${sidebar ? "" : "close"}`}>
+      <nav
+        className={`sidebar ${sidebar ? "" : "close"}`}
+        onMouseEnter={handleSidebarOpen}
+        onMouseLeave={handleSidebarClose}
+      >
         <header>
           <div className="image-text">
             <span className="image">

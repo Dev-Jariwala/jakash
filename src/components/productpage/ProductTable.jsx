@@ -14,7 +14,6 @@ const ProductTable = ({
         <tr>
           <th>NO.</th>
           <th>Product Name</th>
-          {<th>Avg. Cost Price</th>}
           <th>Retail Price</th>
           <th>Wholesale Price</th>
           <th>Stock</th>

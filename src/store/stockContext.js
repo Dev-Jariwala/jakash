@@ -13,7 +13,7 @@ export const StockProvider = ({ children }) => {
       .get(`${BACKEND_URL}stock/fetch-allStocks`)
       .then((response) => {
         // Set the fetched data to state
-        setStocks(response.data.stocks);
+        setStocks(response.data.stocks.reverse());
       })
       .catch((error) => {
         // Handle error if needed

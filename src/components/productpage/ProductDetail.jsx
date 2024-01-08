@@ -9,19 +9,12 @@ const ProductDetail = ({
   isAdmin,
   onStockAdding,
 }) => {
-  const {
-    productName,
-    retailPrice,
-    wholesalePrice,
-    stock,
-    totalStock,
-    AvgCostPrice,
-  } = product;
+  const { productName, retailPrice, wholesalePrice, stock, totalStock } =
+    product;
   return (
     <>
       <td>{productIndex + 1}</td>
       <td>{productName ? productName : "-"}</td>
-      {<td>{AvgCostPrice.toFixed()} Rs</td>}
       <td>{retailPrice} Rs</td>
       <td>{wholesalePrice} Rs</td>
       <td>{stock}</td>

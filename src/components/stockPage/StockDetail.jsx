@@ -8,16 +8,14 @@ const StockDetail = ({
   handleDelete,
   stockNumber,
 }) => {
-  const { _id, productName, costPrice, addStock, date } = stock;
+  const { _id, productName, addStock, date } = stock;
 
   return (
     <>
       <td>{stockNumber}</td>
       <td>{convertToReadableDate(date)}</td>
       <td>{productName}</td>
-      {<td>{costPrice} Rs</td>}
       <td>{addStock}</td>
-      {<td>{costPrice * addStock}</td>}
       <td>
         <div className="action">
           <button

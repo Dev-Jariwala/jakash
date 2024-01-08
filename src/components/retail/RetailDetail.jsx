@@ -1,28 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { convertToReadableDate } from "../../assets/helper";
+import { PDFViewer } from "@react-pdf/renderer";
+import RetailBillPDF from "./RetailBillPdf";
+import Modal from "../modal/Modal";
 
-const RetailDetail = ({ bill }) => {
-  const { BillNo, orderDate, name, subTotal, totalDue } = bill;
+const RetailDetail = ({ bill, onEdit }) => {
+  const { _id, BillNo, orderDate, name, subTotal, totalDue } = bill;
+  const [showPDF, setShowPDF] = useState(false);
+
+  const togglePDF = () => {
+    setShowPDF(!showPDF);
+  };
   return (
-    <tr>
-      <td>{BillNo}</td>
-      <td>{convertToReadableDate(orderDate)}</td>
-      <td>{name}</td>
-      <td>{subTotal}/-</td>
-      <td>
-        <button
-          className={`btn-outline ${totalDue > 0 ? "danger" : "success"}`}
-        >
-          {totalDue > 0 ? totalDue : "Paid"}
-        </button>
-      </td>
-      <td>
-        <button>Edit</button>
-        <button>View</button>
-        <button>Edit-Advance</button>
-        <button>Print</button>
-      </td>
-    </tr>
+    <>
+      {showPDF && (
+        <tr>
+          <td>
+            <Modal isOpen={showPDF} onClose={() => setShowPDF(false)}>
+              <PDFViewer width="1000" height="600">
+                <RetailBillPDF bill={bill} />
+              </PDFViewer>
+            </Modal>
+          </td>
+        </tr>
+      )}
+      <tr id="print-content">
+        <td>{BillNo}</td>
+        <td>{convertToReadableDate(orderDate)}</td>
+        <td>{name}</td>
+        <td>{subTotal}/-</td>
+        <td>
+          <button
+            className={`btn-outline ${totalDue > 0 ? "danger" : "success"}`}
+          >
+            {totalDue > 0 ? totalDue : "Paid"}
+          </button>
+        </td>
+        <td>
+          <button onClick={() => onEdit(_id)}>Edit</button>
+          <button onClick={togglePDF}>View</button>
+          <button>Edit-Advance</button>
+          <button>Print</button>
+        </td>
+      </tr>
+    </>
   );
 };
 

@@ -16,5 +16,5 @@ export function convertToReadableDate(dateTimeString) {
   const formattedDate = date.toLocaleDateString("en-US", optionsDate);
   const formattedTime = date.toLocaleTimeString("en-US", optionsTime);
 
-  return `${formattedDate}, ${formattedTime}`;
+  return `${formattedDate}`;
 }

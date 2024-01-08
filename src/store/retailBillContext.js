@@ -13,7 +13,7 @@ export const RetailBillProvider = ({ children }) => {
       .get(`${BACKEND_URL}retail/fetch-allRetailbills`)
       .then((response) => {
         // Set the fetched data to state
-        setRetailBIlls(response.data.retailBills);
+        setRetailBIlls(response.data.retailBills.reverse());
       })
       .catch((error) => {
         // Handle error if needed

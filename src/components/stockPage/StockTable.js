@@ -25,9 +25,7 @@ const StockTable = ({ isAdmin, currentStocks, indexOfFirstStock }) => {
           <th>NO.</th>
           <th>Date</th>
           <th>Product Name</th>
-          {<th>Cost Price</th>}
           <th>Added Stocks</th>
-          <th>Total</th>
           <th>Action</th>
         </tr>
       </thead>

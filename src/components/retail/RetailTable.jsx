@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { RetailBillContext } from "../../store/retailBillContext";
 import RetailDetail from "./RetailDetail";
 
-const RetailTable = () => {
+const RetailTable = ({ onEdit }) => {
   const { retailBills } = useContext(RetailBillContext);
   //   console.log(retailBills);
   return (
@@ -19,8 +19,14 @@ const RetailTable = () => {
       </thead>
       <tbody>
         {retailBills &&
-          retailBills.reverse().map((bill) => {
-            return <RetailDetail key={bill.BillNo} bill={bill}></RetailDetail>;
+          retailBills.map((bill) => {
+            return (
+              <RetailDetail
+                key={bill.BillNo}
+                bill={bill}
+                onEdit={onEdit}
+              ></RetailDetail>
+            );
           })}
       </tbody>
     </table>
