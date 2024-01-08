@@ -6,6 +6,7 @@ const StockDetail = ({
   stockIndex,
   isAdmin,
   handleDelete,
+  onEdit,
   stockNumber,
 }) => {
   const { _id, productName, addStock, date } = stock;
@@ -18,6 +19,12 @@ const StockDetail = ({
       <td>{addStock}</td>
       <td>
         <div className="action">
+          <button
+            className="btn-outline success"
+            onClick={(e) => onEdit(stock)}
+          >
+            Edit
+          </button>
           <button
             className="btn-outline danger"
             onClick={(e) => handleDelete(_id)}
