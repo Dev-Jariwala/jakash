@@ -1,155 +1,102 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "../modal/Modal";
-import { ProductsContext } from "../../store/productContext";
-
+import { PDFViewer } from "@react-pdf/renderer";
+import { WholeSaleContext } from "../../store/wholeSaleBillContext";
+import WholeSaleTable from "./WholeSaleTable";
+import WholeSalePagination from "./WholeSalePagination";
+import WholeSaleForm from "./WholeSaleForm";
+import WholeSaleEditForm from "./WholeSaleEditForm";
+import WholeSaleBillPDF from "./WholeSaleBillPdf";
 const WholeSale = () => {
+  const { wholeSaleBills } = useContext(WholeSaleContext);
   const [creatingBill, setCreatingBill] = useState(false);
-  const { products } = useContext(ProductsContext);
+  const [editingBIll, setEditingBill] = useState(false);
+  const [editRetailBill, setEditRetailBIll] = useState({
+    BillNo: 0,
+    orderDate: "",
+    name: "",
+    address: "",
+    mobileNumber: "",
+    deliveryDate: "",
+    products: [],
+    totalFirki: "",
+    subTotal: 0,
+    discount: 0,
+    advance: 0,
+    totalDue: 0,
+  });
+  const [showPDF, setShowPDF] = useState({
+    status: false,
+    bill: {},
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [goto, setGoto] = useState(currentPage);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [pageSize, setPageSize] = useState(5);
+  // pagination calculation
+  const PAGE_SIZE = pageSize;
+  const totalPages = Math.ceil(wholeSaleBills.length / PAGE_SIZE);
+  const indexOfLastProduct = currentPage * PAGE_SIZE;
+  const indexOfFirstProduct = indexOfLastProduct - PAGE_SIZE;
+  const filteredProducts = wholeSaleBills.filter((product) =>
+    Object.values(product).some((value) =>
+      String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  function onEdit(billId) {
+    setEditingBill(true);
+    wholeSaleBills.map((bill) => {
+      if (billId === bill._id) {
+        setEditRetailBIll(() => {
+          return {
+            _id: bill._id,
+            BillNo: bill.BillNo,
+            orderDate: bill.orderDate,
+            name: bill.name,
+            address: bill.address,
+            mobileNumber: bill.mobileNumber,
+            deliveryDate: bill.deliveryDate,
+            products: bill.products,
+            totalFirki: bill.totalFirki,
+            subTotal: bill.subTotal,
+            discount: bill.discount,
+            advance: bill.advance,
+            totalDue: bill.totalDue,
+          };
+        });
+      }
+    });
+  }
+
   return (
     <>
+      <Modal
+        isOpen={showPDF.status}
+        onClose={() => setShowPDF({ status: false, bill: {} })}
+      >
+        <PDFViewer width="1000" height="600">
+          <WholeSaleBillPDF bill={showPDF.bill} />
+        </PDFViewer>
+      </Modal>
       <div className="bill">
         <Modal isOpen={creatingBill} onClose={() => setCreatingBill(false)}>
-          <div className="form-container bill">
-            <h4>Enter WholeSale Bill details:</h4>
-            <form>
-              <div className="form-row">
-                <label>
-                  Bill No:
-                  <input type="number" placeholder="Bill No." disabled />
-                </label>
-                <label>
-                  Date:
-                  <input type="date" placeholder="Date" />
-                </label>
-              </div>
-
-              <div className="form-row">
-                <label>
-                  Name:
-                  <input type="text" placeholder="Name" />
-                </label>
-                <label>
-                  Address:
-                  <input type="text" placeholder="Address" />
-                </label>
-              </div>
-              <div className="form-row">
-                <label>
-                  Mobile No.:
-                  <input type="number" placeholder="Mobile No." value="0" />
-                </label>
-                <label>
-                  Delivery Date:
-                  <input type="date" />
-                </label>
-              </div>
-              <div className="products-details">
-                <table className="table">
-                  <thead>
-                    <tr>
-                      <th>Product Name</th>
-                      <th>Stock</th>
-                      <th>Rate</th>
-                      <th>Qth</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {products.map((prod) => {
-                      return (
-                        <tr key={prod._id}>
-                          <td>
-                            <input
-                              type="text"
-                              value={prod.productName}
-                              disabled
-                            />
-                          </td>
-                          <td>
-                            {" "}
-                            <input type="number" value={prod.stock} disabled />
-                          </td>
-                          <td>
-                            <input
-                              type="number"
-                              value={prod.retailPrice}
-                              disabled
-                            />
-                          </td>
-                          <td>
-                            <input type="number" placeholder="Qty" />
-                          </td>
-                          <td>
-                            {" "}
-                            <input type="number" placeholder="Total" disabled />
-                          </td>
-                        </tr>
-                      );
-                    })}
-
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <button className="calculate">Calculate</button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td>
-                        <label>
-                          Total Firki
-                          <input type="text" />
-                        </label>
-                      </td>
-                      <td>
-                        <label>
-                          Sub Total
-                          <input type="number" disabled />
-                        </label>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <label>
-                        Discount
-                        <input type="number" />
-                      </label>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <label>
-                        Advance
-                        <input type="number" />
-                      </label>
-                    </tr>
-                    <tr>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <label>
-                        Total Due
-                        <input type="number" />
-                      </label>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <button type="submit">Generate</button>
-              </div>
-            </form>
-          </div>
+          <WholeSaleForm
+            setCreatingBill={setCreatingBill}
+            setShowPDF={setShowPDF}
+          ></WholeSaleForm>
+        </Modal>
+        <Modal isOpen={editingBIll} onClose={() => setEditingBill(false)}>
+          <WholeSaleEditForm
+            setEditingBill={setEditingBill}
+            editRetailBill={editRetailBill}
+            setEditRetailBIll={setEditRetailBIll}
+          />
         </Modal>
       </div>
       <div className="table-container">
@@ -162,7 +109,10 @@ const WholeSale = () => {
         <div className="table-content">
           <div className="table-features">
             <div className="page-size-dropdown">
-              <select id="pageSize">
+              <select
+                id="pageSize"
+                onChange={(e) => setPageSize(e.target.value)}
+              >
                 <option value="5">5</option>
                 <option value="10">10</option>
                 <option value="15">15</option>
@@ -170,114 +120,27 @@ const WholeSale = () => {
             </div>
             <div className="search-bar">
               <form>
-                <input type="text" placeholder="Search" />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </form>
             </div>
           </div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Bill No.</th>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Jan 03,2024 06:00 Am</td>
-                <td>Dev</td>
-                <td>555/-</td>
-                <td>
-                  <button>Paid</button>
-                </td>
-                <td>
-                  <button>Edit</button>
-                  <button>View</button>
-                  <button>Edit-Advance</button>
-                  <button>Print</button>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Jan 03,2024 06:00 Am</td>
-                <td>Dev</td>
-                <td>555/-</td>
-                <td>
-                  <button>Paid</button>
-                </td>
-                <td>
-                  <button>Edit</button>
-                  <button>View</button>
-                  <button>Edit-Advance</button>
-                  <button>Print</button>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Jan 03,2024 06:00 Am</td>
-                <td>Dev</td>
-                <td>555/-</td>
-                <td>
-                  <button>Paid</button>
-                </td>
-                <td>
-                  <button>Edit</button>
-                  <button>View</button>
-                  <button>Edit-Advance</button>
-                  <button>Print</button>
-                </td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Jan 03,2024 06:00 Am</td>
-                <td>Dev</td>
-                <td>555/-</td>
-                <td>
-                  <button>Paid</button>
-                </td>
-                <td>
-                  <button>Edit</button>
-                  <button>View</button>
-                  <button>Edit-Advance</button>
-                  <button>Print</button>
-                </td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>Jan 03,2024 06:00 Am</td>
-                <td>Dev</td>
-                <td>555/-</td>
-                <td>
-                  <button>Paid</button>
-                </td>
-                <td>
-                  <button>Edit</button>
-                  <button>View</button>
-                  <button>Edit-Advance</button>
-                  <button>Print</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div className="pagination">
-            <div className="page-navigation">
-              <button className="">Previous</button>
-              <button className="">1</button>
-              <button className="">2</button>
-              <button className="">3</button>
-              <button className="">4</button>
-              <button className="">5</button>
-              <button className="">Next</button>
-            </div>
-            <div className="page-go">
-              <input type="number" placeholder="Page No." min="1" />
-              <button>Go</button>
-            </div>
-          </div>
+
+          <WholeSaleTable
+            onEdit={onEdit}
+            currentProducts={currentProducts}
+          ></WholeSaleTable>
+          <WholeSalePagination
+            setCurrentPage={setCurrentPage}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setGoto={setGoto}
+            goto={goto}
+          ></WholeSalePagination>
         </div>
       </div>
     </>
